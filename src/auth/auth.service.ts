@@ -15,7 +15,9 @@ export class AuthService {
       });
     } catch (e) {
       if (e instanceof APIError) {
-        return { error: { message: e.message, status: e.status } };
+        return {
+          error: { message: (e as any).message, status: (e as any).status },
+        };
       }
       throw e;
     }
@@ -29,7 +31,9 @@ export class AuthService {
       });
     } catch (e) {
       if (e instanceof APIError) {
-        return { error: { message: e.message, status: e.status } };
+        return {
+          error: { message: (e as any).message, status: (e as any).status },
+        };
       }
       throw e;
     }
