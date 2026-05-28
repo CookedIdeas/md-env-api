@@ -4,18 +4,39 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableCors({
     origin: true,
     credentials: true,
   });
+
+  app.use('/docs', (req: any, res: any, next: any) => {
+    const auth = req.headers['authorization'];
+    const expected =
+      'Basic ' +
+      Buffer.from(
+        `${process.env.SWAGGER_USER}:${process.env.SWAGGER_PASSWORD}`,
+      ).toString('base64');
+
+    if (auth === expected) return next();
+
+    res.set('WWW-Authenticate', 'Basic realm="Swagger"');
+    res.status(401).send('Unauthorized');
+  });
+
   const config = new DocumentBuilder()
-    .setTitle('YOUR APPLICATION LABEL')
+    .setTitle(process.env.APP_NAME ?? 'API')
     .setDescription('YOUR APPLICATION DESCRIPTION')
     .setVersion('1.0')
     .addTag('app')
+    .addBearerAuth()
     .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory); // /api to get swagger document
+
+  if (process.env.NODE_ENV !== 'production') {
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('docs', app, document);
+  }
+
   await app.listen(process.env.PORT ?? 3333);
 }
 bootstrap()
