@@ -5,9 +5,10 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { PrismaClient } from './src/generated/prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { env } from './src/common/env/env';
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: env.DATABASE_URL,
 });
 
 const prisma = new PrismaClient({
