@@ -18,6 +18,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  projects      Project[]
+  files         File[]
 
   @@unique([email])
   @@map("user")
@@ -69,4 +71,64 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+// ------------------------------------------------------------
+// API Entities
+// ------------------------------------------------------------
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  batches     Batch[]
+
+  @@map("project")
+}
+
+model Batch {
+  id        String      @id @default(cuid())
+  name      String
+  status    BatchStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  projectId String
+  project   Project     @relation(fields: [projectId], references: [id])
+  files     File[]
+
+  @@map("batch")
+}
+
+model File {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  size      Int
+  mimeType  String
+  type      FileType
+  createdAt DateTime @default(now())
+  sessionId String?
+  batch     Batch?   @relation(fields: [sessionId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("file")
+}
+
+enum BatchStatus {
+  PENDING
+  PROCESSING
+  DONE
+  ERROR
+  TO_REVIEW
+}
+
+enum FileType {
+  INPUT
+  OUTPUT
+  REFERENTIAL
 }
