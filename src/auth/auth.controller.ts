@@ -1,7 +1,13 @@
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  AuthResponseDto,
+  LoginDto,
+  RegisterDto,
+  SessionDto,
+} from './dto/auth.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -17,8 +23,10 @@ export class AuthController {
   };
 
   @Post('register')
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({ status: 201, type: AuthResponseDto })
   async register(
-    @Body() body: { email: string; password: string; name: string },
+    @Body() body: RegisterDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result: any = await this.authService.register(body);
@@ -35,8 +43,10 @@ export class AuthController {
   }
 
   @Post('login')
+  @ApiOperation({ summary: 'Login' })
+  @ApiResponse({ status: 200, type: AuthResponseDto })
   async login(
-    @Body() body: { email: string; password: string },
+    @Body() body: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result: any = await this.authService.login(body);
@@ -54,6 +64,8 @@ export class AuthController {
   }
 
   @Post('logout')
+  @ApiOperation({ summary: 'Logout' })
+  @ApiResponse({ status: 200 })
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const headers = new Headers();
     const cookie = req.headers.cookie;
@@ -69,6 +81,8 @@ export class AuthController {
   }
 
   @Get('me')
+  @ApiOperation({ summary: 'Get current session' })
+  @ApiResponse({ status: 200, type: SessionDto })
   async me(@Req() req: Request) {
     const headers = new Headers();
     const cookie = req.headers.cookie;

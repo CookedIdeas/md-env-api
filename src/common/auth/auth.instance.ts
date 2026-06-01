@@ -1,13 +1,14 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { PrismaService } from '../prisma/prisma.service';
+import { env } from '../env/env';
 
 export const createAuth = (prisma: PrismaService) =>
   betterAuth({
     database: prismaAdapter(prisma, { provider: 'postgresql' }), // Make it coherent with your schema file
-    appName: process.env.APP_NAME ?? 'YOUR_APP',
-    secret: process.env.BETTER_AUTH_SECRET ?? 'secret',
-    baseURL: process.env.BETTER_AUTH_BASE_URL || 'http://localhost:3000',
+    appName: env.APP_NAME,
+    secret: env.BETTER_AUTH_SECRET,
+    baseURL: env.BETTER_AUTH_BASE_URL,
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
