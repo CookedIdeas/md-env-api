@@ -7,9 +7,18 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { PrismaService } from './common/prisma/prisma.service';
 import { AuthMiddleware } from './common/auth/auth.middleware';
 import { HealthModule } from './health/health.module';
+import { ProjectModule } from './project/project.module';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, PrismaModule, HealthModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    PrismaModule,
+    HealthModule,
+    ProjectModule,
+    BatchModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
