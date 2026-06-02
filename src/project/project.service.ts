@@ -17,11 +17,19 @@ export class ProjectService {
     });
   }
 
-  findAll(userId: string) {
-    return this.prisma.project.findMany({
+  async findAll(userId: string) {
+    const projects = await this.prisma.project.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
+      include: {
+        _count: { select: { batches: true } },
+      },
     });
+
+    return projects.map(({ _count, ...project }) => ({
+      ...project,
+      batchCount: _count.batches,
+    }));
   }
 
   async findOne(userId: string, id: string) {

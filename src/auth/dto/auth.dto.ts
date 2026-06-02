@@ -31,13 +31,38 @@ export class AuthResponseDto {
   };
 }
 
-export class SessionDto {
+export class SessionDataDto {
   @ApiProperty()
   id: string;
+
+  @ApiProperty()
+  token: string;
+
+  @ApiProperty()
+  expiresAt: Date;
+
+  @ApiProperty()
+  userId: string;
+}
+
+export class UserDataDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
 
   @ApiProperty()
   email: string;
 
   @ApiProperty()
-  name: string;
+  emailVerified: boolean;
+}
+
+export class SessionDto {
+  @ApiProperty({ type: SessionDataDto })
+  session: SessionDataDto;
+
+  @ApiProperty({ type: UserDataDto })
+  user: UserDataDto;
 }
