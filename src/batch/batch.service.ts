@@ -26,13 +26,22 @@ export class BatchService {
   async findOne(id: string) {
     const batch = await this.prisma.batch.findUnique({
       where: { id },
+      include: {
+        project: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     if (!batch) {
       throw new NotFoundException(`Batch with id "${id}" not found`);
     }
 
-    return batch;
+    return {
+      ...batch,
+    };
   }
 
   async update(id: string, dto: UpdateBatchDto) {

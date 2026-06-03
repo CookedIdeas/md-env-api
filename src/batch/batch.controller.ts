@@ -14,6 +14,7 @@ import { AuthGuard } from '@/common/guards/auth.guard';
 import { BatchService } from './batch.service';
 import { CreateBatchDto } from './dto/create-batch.dto';
 import { UpdateBatchDto } from './dto/update-batch.dto';
+import { FindOneBatchDTO } from './dto/find-one-batch.dto';
 
 @ApiTags('batches')
 @UseGuards(AuthGuard)
@@ -37,7 +38,7 @@ export class BatchController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a batch by id' })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 200, type: FindOneBatchDTO })
   @ApiResponse({ status: 404 })
   findOne(@Param('id') id: string) {
     return this.batchService.findOne(id);
