@@ -24,21 +24,25 @@ export const createAuth = (prisma: PrismaService) =>
       freshAge: 60 * 60 * 2,
     },
     advanced: {
-      crossSubDomainCookies: {
-        enabled: true,
-        domain: '.gabrielgourcerol.com',
-      },
-      cookies: {
-        sessionToken: {
-          name: 'better-auth.session_token',
-          options: {
-            httpOnly: true,
-            sameSite: 'none',
-            secure: process.env.NODE_ENV === 'production',
-            path: '/',
+      ...(process.env.NODE_ENV === 'production' && {
+        crossSubDomainCookies: {
+          enabled: true,
+          domain: '.gabrielgourcerol.com',
+        },
+      }),
+      ...(process.env.NODE_ENV !== 'production' && {
+        cookies: {
+          sessionToken: {
+            name: 'better-auth.session_token',
+            options: {
+              httpOnly: true,
+              sameSite: 'none',
+              secure: false,
+              path: '/',
+            },
           },
         },
-      },
+      }),
     },
     rateLimit: {
       enabled: true,
