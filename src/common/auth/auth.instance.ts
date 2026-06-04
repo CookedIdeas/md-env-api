@@ -28,6 +28,17 @@ export const createAuth = (prisma: PrismaService) =>
         enabled: true,
         domain: '.gabrielgourcerol.com',
       },
+      cookies: {
+        sessionToken: {
+          name: 'better-auth.session_token',
+          options: {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+          },
+        },
+      },
     },
     rateLimit: {
       enabled: true,
