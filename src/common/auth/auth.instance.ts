@@ -24,12 +24,16 @@ export const createAuth = (prisma: PrismaService) =>
       freshAge: 60 * 60 * 2,
     },
     advanced: {
+      crossSubdomainCookies: {
+        enabled: true,
+        domain: '.gabrielgourcerol.com',
+      },
       cookies: {
         sessionToken: {
-          name: 'yourapp.session',
+          name: 'better-auth.session_token',
           options: {
             httpOnly: true,
-            sameSite: '1max',
+            sameSite: 'none',
             secure: process.env.NODE_ENV === 'production',
             path: '/',
           },
@@ -41,5 +45,5 @@ export const createAuth = (prisma: PrismaService) =>
       window: 60,
       max: 100,
     },
-    trustedOrigins: ['http://localhost:3000', 'http://localhost:3001'],
+    trustedOrigins: env.FRONTEND_URLS,
   });
